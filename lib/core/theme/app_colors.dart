@@ -8,11 +8,12 @@ class AppColors {
   static const Color primaryAction = Color(0xFF8C7070);
   static const Color primarySoft = Color(0xFFF4ECEC);
 
-  // backgrounds
+  // background
   static const Color background = Color(0xFFFDF9F7);
   static const Color surface = Color(0xFFFFFFFF);
+  static const Color onPrimary = Color(0xFFFFFFFF);
 
-  // semantic colors
+  // semantic
   static const Color good = Color(0xFF8FAA8F);
   static const Color goodBackground = Color(0xFFEDF4ED);
 
@@ -22,10 +23,10 @@ class AppColors {
   static const Color warning = Color(0xFFC89B5B);
   static const Color warningBackground = Color(0xFFFCF3E7);
 
-  // text
+  // typography
   static const Color textPrimary = Color(0xFF4A3F3F);
   static const Color textSecondary = Color(0xFF786B6B);
 
-  // borders
+  // structural
   static const Color border = Color(0xFFE9D9D9);
 }
