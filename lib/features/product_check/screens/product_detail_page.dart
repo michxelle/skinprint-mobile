@@ -7,13 +7,17 @@ import '/features/product_check/models/beauty_product.dart';
 import '/features/product_check/models/ingredient_analysis.dart';
 import '/features/product_check/services/ingredient_analyzer.dart';
 import 'analysis_result_page.dart';
+import '/features/my_products/controllers/saved_products_controller.dart';
+import '/features/my_products/widgets/reaction_picker_sheet.dart';
 
 class ProductDetailPage extends StatelessWidget {
   final BeautyProduct product;
+  final SavedProductsController savedProductsController;
 
   const ProductDetailPage({
     super.key,
     required this.product,
+    required this.savedProductsController,
   });
 
   void _analyze(
@@ -156,6 +160,62 @@ class ProductDetailPage extends StatelessWidget {
     );
   }
 
+  Future<void> _saveProduct(
+    BuildContext context,
+  ) async {
+    final existing =
+        savedProductsController.findByCode(
+      product.code,
+    );
+
+    final reaction =
+        await showReactionPicker(
+      context,
+      currentReaction:
+          existing?.reaction,
+    );
+
+    if (reaction == null) {
+      return;
+    }
+
+    try {
+      await savedProductsController
+          .saveProduct(
+        product: product,
+        reaction: reaction,
+      );
+
+      if (!context.mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        SnackBar(
+          content: Text(
+            existing == null
+                ? 'Added to My Products.'
+                : 'Your product experience was updated.',
+          ),
+        ),
+      );
+    } catch (_) {
+      if (!context.mounted) {
+        return;
+      }
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Couldn\'t save this product.',
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -250,6 +310,44 @@ class ProductDetailPage extends StatelessWidget {
                       ? () =>
                           _analyze(context)
                       : null,
+            ),
+            const SizedBox(height: 10),
+            AnimatedBuilder(
+              animation:
+                  savedProductsController,
+              builder: (
+                context,
+                child,
+              ) {
+                final existing =
+                    savedProductsController
+                        .findByCode(
+                  product.code,
+                );
+
+                return SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                    onPressed: product.code.isEmpty
+                        ? null
+                        : () =>
+                            _saveProduct(context),
+                    child: Text(
+                      existing == null
+                          ? 'Save to My Products'
+                          : 'Update My Product',
+                      style:
+                          AppTextStyles.bodyMedium(
+                        color:
+                            AppColors.primaryAction,
+                      ).copyWith(
+                        fontWeight:
+                            FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ],
         ),

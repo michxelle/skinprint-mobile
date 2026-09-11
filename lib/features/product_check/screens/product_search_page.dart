@@ -7,17 +7,18 @@ import '/features/product_check/data/open_beauty_facts_service.dart';
 import '/features/product_check/models/beauty_product.dart';
 import '/features/product_check/widgets/product_result_card.dart';
 import 'product_detail_page.dart';
+import '/features/my_products/controllers/saved_products_controller.dart';
 
 class ProductSearchPage extends StatefulWidget {
-  const ProductSearchPage({super.key});
+  final SavedProductsController savedProductsController;
+  const ProductSearchPage({super.key, required this.savedProductsController});
 
   @override
   State<ProductSearchPage> createState() =>
       _ProductSearchPageState();
 }
 
-class _ProductSearchPageState
-    extends State<ProductSearchPage> {
+class _ProductSearchPageState extends State<ProductSearchPage> {
   final TextEditingController _searchController =
       TextEditingController();
 
@@ -29,6 +30,12 @@ class _ProductSearchPageState
   bool _isLoading = false;
   bool _hasSearched = false;
   String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.savedProductsController.loadProducts();
+  }
 
   @override
   void dispose() {
@@ -95,6 +102,8 @@ class _ProductSearchPageState
       MaterialPageRoute(
         builder: (_) => ProductDetailPage(
           product: product,
+          savedProductsController:
+              widget.savedProductsController,
         ),
       ),
     );
@@ -148,7 +157,7 @@ class _ProductSearchPageState
                     decoration:
                         const InputDecoration(
                       hintText:
-                          'COSRX, Rhode, 880...',
+                          'COSRX, Rhode,...',
                     ),
                   ),
 
