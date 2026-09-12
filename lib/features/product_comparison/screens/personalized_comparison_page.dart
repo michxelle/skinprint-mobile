@@ -76,11 +76,7 @@ class PersonalizedComparisonPage extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              ..._buildMatches(
-                context,
-                comparison.didntWorkOnlyMatches,
-                _MatchType.didntWork,
-              ),
+              ..._buildMatches(context, comparison.didntWorkOnlyMatches),
 
               const SizedBox(height: 18),
 
@@ -106,11 +102,7 @@ class PersonalizedComparisonPage extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              ..._buildMatches(
-                context,
-                comparison.workedOnlyMatches,
-                _MatchType.worked,
-              ),
+              ..._buildMatches(context, comparison.workedOnlyMatches),
 
               const SizedBox(height: 18),
 
@@ -133,11 +125,7 @@ class PersonalizedComparisonPage extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              ..._buildMatches(
-                context,
-                comparison.mixedMatches,
-                _MatchType.mixed,
-              ),
+              ..._buildMatches(context, comparison.mixedMatches),
 
               const SizedBox(height: 18),
 
@@ -218,7 +206,6 @@ class PersonalizedComparisonPage extends StatelessWidget {
   List<Widget> _buildMatches(
     BuildContext context,
     List<IngredientHistoryMatch> matches,
-    _MatchType type,
   ) {
     final widgets = <Widget>[];
 
@@ -226,7 +213,6 @@ class PersonalizedComparisonPage extends StatelessWidget {
       widgets.add(
         _IngredientHistoryRow(
           match: matches[i],
-          type: type,
           onTap: () => _openIngredient(context, matches[i].ingredient),
         ),
       );
@@ -239,8 +225,6 @@ class PersonalizedComparisonPage extends StatelessWidget {
     return widgets;
   }
 }
-
-enum _MatchType { worked, didntWork, mixed }
 
 class _ComparisonOverview extends StatelessWidget {
   final ProductHistoryComparison comparison;
@@ -282,40 +266,9 @@ class _ComparisonOverview extends StatelessWidget {
 
 class _IngredientHistoryRow extends StatelessWidget {
   final IngredientHistoryMatch match;
-  final _MatchType type;
   final VoidCallback onTap;
 
-  const _IngredientHistoryRow({
-    required this.match,
-    required this.type,
-    required this.onTap,
-  });
-
-  Color get _accentColor {
-    switch (type) {
-      case _MatchType.worked:
-        return AppColors.good;
-
-      case _MatchType.didntWork:
-        return AppColors.concern;
-
-      case _MatchType.mixed:
-        return AppColors.primaryAction;
-    }
-  }
-
-  String get _categoryLabel {
-    switch (type) {
-      case _MatchType.worked:
-        return 'WORKED HISTORY';
-
-      case _MatchType.didntWork:
-        return 'DIDN’T-WORK HISTORY';
-
-      case _MatchType.mixed:
-        return 'MIXED HISTORY';
-    }
-  }
+  const _IngredientHistoryRow({required this.match, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -324,10 +277,6 @@ class _IngredientHistoryRow extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(_categoryLabel, style: AppTextStyles.label(color: _accentColor)),
-
-          const SizedBox(height: 6),
-
           InkWell(
             onTap: onTap,
             child: Row(

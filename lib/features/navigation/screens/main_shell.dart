@@ -5,6 +5,7 @@ import 'package:skinprint/core/theme/app_text_styles.dart';
 import 'package:skinprint/features/home/screens/home_page.dart';
 import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
 import 'package:skinprint/features/my_products/screens/my_products_page.dart';
+import 'package:skinprint/features/ingredients/screens/ingredients_page.dart';
 
 class MainShell extends StatefulWidget {
   const MainShell({super.key});
@@ -37,27 +38,54 @@ class _MainShellState extends State<MainShell> {
       _selectedIndex = index;
     });
 
-    if (index == 1) {
+    if (index == 1 || index == 2) {
       _savedProductsController.loadProducts();
+    }
+  }
+
+  Widget _buildCurrentPage() {
+    switch (_selectedIndex) {
+      case 0:
+        return HomePage(savedProductsController: _savedProductsController);
+
+      case 1:
+        return MyProductsPage(controller: _savedProductsController);
+
+      case 2:
+        return IngredientsPage(
+          savedProductsController: _savedProductsController,
+        );
+
+      default:
+        return HomePage(savedProductsController: _savedProductsController);
+    }
+  }
+
+  Widget _buildAppBarTitle() {
+    switch (_selectedIndex) {
+      case 0:
+        return Text(
+          'Skinprint',
+          style: AppTextStyles.brand(color: AppColors.onPrimary),
+        );
+
+      case 1:
+        return const Text('My Products');
+
+      case 2:
+        return const Text('Ingredients');
+
+      default:
+        return const Text('Skinprint');
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 68,
-        title: _selectedIndex == 0
-            ? Text(
-                'Skinprint',
-                style: AppTextStyles.brand(color: AppColors.onPrimary),
-              )
-            : const Text('My Products'),
-      ),
+      appBar: AppBar(toolbarHeight: 68, title: _buildAppBarTitle()),
 
-      body: _selectedIndex == 0
-          ? HomePage(savedProductsController: _savedProductsController)
-          : MyProductsPage(controller: _savedProductsController),
+      body: _buildCurrentPage(),
 
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
@@ -92,6 +120,12 @@ class _MainShellState extends State<MainShell> {
               icon: Icon(Icons.list_alt_outlined),
               activeIcon: Icon(Icons.list_alt),
               label: 'My Products',
+            ),
+
+            BottomNavigationBarItem(
+              icon: Icon(Icons.science_outlined),
+              activeIcon: Icon(Icons.science),
+              label: 'Ingredients',
             ),
           ],
         ),

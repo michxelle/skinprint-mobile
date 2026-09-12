@@ -91,5 +91,37 @@ void main() {
 
       expect(result.matchedIngredientCount, 0);
     });
+
+    test('identifies ingredients not seen in saved history', () {
+      const newProduct = BeautyProduct(
+        code: 'new-product',
+        name: 'New Serum',
+        brand: 'Test',
+        ingredientsText: 'Water, Glycerin, Ceramide NP',
+        imageUrl: '',
+      );
+
+      final history = [
+        SavedProduct(
+          id: 1,
+          code: 'old-product',
+          name: 'Old Serum',
+          brand: 'Test',
+          ingredientsText: 'Water, Glycerin',
+          imageUrl: '',
+          reaction: ProductReaction.neutral,
+          savedAt: DateTime(2026),
+        ),
+      ];
+
+      final result = ProductComparisonService.compare(
+        newProduct: newProduct,
+        history: history,
+      );
+
+      expect(result.unseenIngredients, contains('Ceramide NP'));
+
+      expect(result.unseenIngredients, isNot(contains('Water')));
+    });
   });
 }

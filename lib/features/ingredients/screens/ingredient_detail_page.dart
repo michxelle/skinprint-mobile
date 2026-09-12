@@ -96,13 +96,6 @@ class _IngredientDetailPageState extends State<IngredientDetailPage> {
           padding: const EdgeInsets.fromLTRB(24, 36, 24, 44),
           children: [
             Text(
-              (ingredient?.name ?? widget.ingredientName).toUpperCase(),
-              style: AppTextStyles.label(color: AppColors.primaryAction),
-            ),
-
-            const SizedBox(height: 10),
-
-            Text(
               ingredient?.name ?? widget.ingredientName,
               style: AppTextStyles.displayLarge(),
             ),

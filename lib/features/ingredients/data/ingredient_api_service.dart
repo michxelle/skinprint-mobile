@@ -103,29 +103,60 @@ class IngredientApiService {
     try {
       final encodedName = Uri.encodeComponent(ingredientName);
 
-      final uri = Uri.parse(
+      // find the PubChem CID from the ingredient name
+      final cidUri = Uri.parse(
         'https://$_pubChemHost/rest/pug/'
-        'compound/name/$encodedName/'
-        'description/JSON',
+        'compound/name/$encodedName/cids/JSON',
       );
 
-      final response = await http.get(uri, headers: _headers);
+      final cidResponse = await http.get(cidUri, headers: _headers);
 
-      if (response.statusCode == 404) {
+      if (cidResponse.statusCode != 200) {
         return null;
       }
 
-      if (response.statusCode != 200) {
+      final cidDecoded = jsonDecode(cidResponse.body);
+
+      if (cidDecoded is! Map<String, dynamic>) {
         return null;
       }
 
-      final decoded = jsonDecode(response.body);
+      final identifierList = cidDecoded['IdentifierList'];
 
-      if (decoded is! Map<String, dynamic>) {
+      if (identifierList is! Map<String, dynamic>) {
         return null;
       }
 
-      final informationList = decoded['InformationList'];
+      final cids = identifierList['CID'];
+
+      if (cids is! List || cids.isEmpty) {
+        return null;
+      }
+
+      final cid = cids.first;
+
+      // get the description using the CID
+      final descriptionUri = Uri.parse(
+        'https://$_pubChemHost/rest/pug/'
+        'compound/cid/$cid/description/JSON',
+      );
+
+      final descriptionResponse = await http.get(
+        descriptionUri,
+        headers: _headers,
+      );
+
+      if (descriptionResponse.statusCode != 200) {
+        return null;
+      }
+
+      final descriptionDecoded = jsonDecode(descriptionResponse.body);
+
+      if (descriptionDecoded is! Map<String, dynamic>) {
+        return null;
+      }
+
+      final informationList = descriptionDecoded['InformationList'];
 
       if (informationList is! Map<String, dynamic>) {
         return null;
@@ -137,21 +168,25 @@ class IngredientApiService {
         return null;
       }
 
-      final first = information.first;
+      for (final item in information) {
+        if (item is! Map<String, dynamic>) {
+          continue;
+        }
 
-      if (first is! Map<String, dynamic>) {
-        return null;
+        final description = item['Description'];
+
+        if (description == null) {
+          continue;
+        }
+
+        final text = description.toString().trim();
+
+        if (text.isNotEmpty) {
+          return text;
+        }
       }
 
-      final description = first['Description'];
-
-      if (description == null) {
-        return null;
-      }
-
-      final text = description.toString().trim();
-
-      return text.isEmpty ? null : text;
+      return null;
     } catch (_) {
       return null;
     }
