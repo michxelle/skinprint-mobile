@@ -37,6 +37,8 @@ class ProductHistoryComparison {
 
   final List<IngredientHistoryMatch> mixedMatches;
 
+  final List<String> unseenIngredients;
+
   const ProductHistoryComparison({
     required this.totalNewIngredients,
     required this.comparedWorkedProducts,
@@ -45,6 +47,7 @@ class ProductHistoryComparison {
     required this.workedOnlyMatches,
     required this.didntWorkOnlyMatches,
     required this.mixedMatches,
+    required this.unseenIngredients,
   });
 
   bool get hasReactionHistory =>
@@ -55,11 +58,7 @@ class ProductHistoryComparison {
       didntWorkOnlyMatches.length +
       mixedMatches.length;
 
-  int get unseenIngredientCount {
-    final unseen = totalNewIngredients - matchedIngredientCount;
-
-    return unseen < 0 ? 0 : unseen;
-  }
+  int get unseenIngredientCount => unseenIngredients.length;
 
   int get workedHistoryIngredientCount =>
       workedOnlyMatches.length + mixedMatches.length;

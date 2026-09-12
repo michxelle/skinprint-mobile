@@ -17,6 +17,16 @@ class ProductComparisonService {
         .where((savedProduct) => savedProduct.code != newProduct.code)
         .toList();
 
+    final allHistoryIngredientNames = <String>{};
+
+    for (final product in relevantHistory) {
+      final parsed = IngredientParser.parse(product.ingredientsText);
+
+      allHistoryIngredientNames.addAll(
+        parsed.map((ingredient) => ingredient.normalizedName),
+      );
+    }
+
     final workedProducts = relevantHistory
         .where((product) => product.reaction == ProductReaction.worked)
         .map(_HistoryIngredientSet.fromProduct)
@@ -37,7 +47,12 @@ class ProductComparisonService {
 
     final mixedMatches = <IngredientHistoryMatch>[];
 
+    final unseenIngredients = <String>[];
+
     for (final ingredient in newIngredients) {
+      if (!allHistoryIngredientNames.contains(ingredient.normalizedName)) {
+        unseenIngredients.add(ingredient.displayName);
+      }
       final workedNames = workedProducts
           .where(
             (product) =>
@@ -83,6 +98,7 @@ class ProductComparisonService {
       workedOnlyMatches: workedOnlyMatches,
       didntWorkOnlyMatches: didntWorkOnlyMatches,
       mixedMatches: mixedMatches,
+      unseenIngredients: unseenIngredients,
     );
   }
 }

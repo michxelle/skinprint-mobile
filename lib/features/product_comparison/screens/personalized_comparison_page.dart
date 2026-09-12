@@ -4,16 +4,32 @@ import 'package:skinprint/core/theme/app_colors.dart';
 import 'package:skinprint/core/theme/app_text_styles.dart';
 import 'package:skinprint/features/product_check/models/beauty_product.dart';
 import 'package:skinprint/features/product_comparison/models/product_history_comparison.dart';
+import 'package:skinprint/features/ingredients/screens/ingredient_detail_page.dart';
+import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
 
 class PersonalizedComparisonPage extends StatelessWidget {
   final BeautyProduct product;
   final ProductHistoryComparison comparison;
+  final SavedProductsController savedProductsController;
 
   const PersonalizedComparisonPage({
     super.key,
     required this.product,
     required this.comparison,
+    required this.savedProductsController,
   });
+
+  void _openIngredient(BuildContext context, String ingredient) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => IngredientDetailPage(
+          ingredientName: ingredient,
+          savedProductsController: savedProductsController,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +77,7 @@ class PersonalizedComparisonPage extends StatelessWidget {
               const SizedBox(height: 12),
 
               ..._buildMatches(
+                context,
                 comparison.didntWorkOnlyMatches,
                 _MatchType.didntWork,
               ),
@@ -89,7 +106,11 @@ class PersonalizedComparisonPage extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              ..._buildMatches(comparison.workedOnlyMatches, _MatchType.worked),
+              ..._buildMatches(
+                context,
+                comparison.workedOnlyMatches,
+                _MatchType.worked,
+              ),
 
               const SizedBox(height: 18),
 
@@ -112,28 +133,38 @@ class PersonalizedComparisonPage extends StatelessWidget {
 
               const SizedBox(height: 12),
 
-              ..._buildMatches(comparison.mixedMatches, _MatchType.mixed),
+              ..._buildMatches(
+                context,
+                comparison.mixedMatches,
+                _MatchType.mixed,
+              ),
 
               const SizedBox(height: 18),
 
               const Divider(),
             ],
 
-            if (comparison.matchedIngredientCount == 0) ...[
+            if (comparison.unseenIngredients.isNotEmpty) ...[
               const SizedBox(height: 30),
 
-              Text(
-                'No familiar ingredients yet.',
-                style: AppTextStyles.sectionTitle(),
-              ),
+              Text('New to your history', style: AppTextStyles.sectionTitle()),
 
               const SizedBox(height: 10),
 
               Text(
-                'None of this product’s ingredients '
-                'matched the reaction history currently '
-                'saved in your Skinprint.',
+                'These ingredients haven’t appeared '
+                'in any of the products currently saved '
+                'in your Skinprint.',
                 style: AppTextStyles.bodyMedium(),
+              ),
+
+              const SizedBox(height: 12),
+
+              ...comparison.unseenIngredients.map(
+                (ingredient) => _NewIngredientRow(
+                  ingredient: ingredient,
+                  onTap: () => _openIngredient(context, ingredient),
+                ),
               ),
 
               const SizedBox(height: 18),
@@ -185,13 +216,20 @@ class PersonalizedComparisonPage extends StatelessWidget {
   }
 
   List<Widget> _buildMatches(
+    BuildContext context,
     List<IngredientHistoryMatch> matches,
     _MatchType type,
   ) {
     final widgets = <Widget>[];
 
     for (var i = 0; i < matches.length; i++) {
-      widgets.add(_IngredientHistoryRow(match: matches[i], type: type));
+      widgets.add(
+        _IngredientHistoryRow(
+          match: matches[i],
+          type: type,
+          onTap: () => _openIngredient(context, matches[i].ingredient),
+        ),
+      );
 
       if (i < matches.length - 1) {
         widgets.add(const Divider());
@@ -245,8 +283,13 @@ class _ComparisonOverview extends StatelessWidget {
 class _IngredientHistoryRow extends StatelessWidget {
   final IngredientHistoryMatch match;
   final _MatchType type;
+  final VoidCallback onTap;
 
-  const _IngredientHistoryRow({required this.match, required this.type});
+  const _IngredientHistoryRow({
+    required this.match,
+    required this.type,
+    required this.onTap,
+  });
 
   Color get _accentColor {
     switch (type) {
@@ -285,7 +328,24 @@ class _IngredientHistoryRow extends StatelessWidget {
 
           const SizedBox(height: 6),
 
-          Text(match.ingredient, style: AppTextStyles.sectionTitle()),
+          InkWell(
+            onTap: onTap,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    match.ingredient,
+                    style: AppTextStyles.sectionTitle(),
+                  ),
+                ),
+                const Icon(
+                  Icons.chevron_right,
+                  size: 20,
+                  color: AppColors.textSecondary,
+                ),
+              ],
+            ),
+          ),
 
           const SizedBox(height: 10),
 
@@ -336,6 +396,41 @@ class _HistoryEvidence extends StatelessWidget {
 
           TextSpan(text: productNames.join(', ')),
         ],
+      ),
+    );
+  }
+}
+
+class _NewIngredientRow extends StatelessWidget {
+  final String ingredient;
+  final VoidCallback onTap;
+
+  const _NewIngredientRow({required this.ingredient, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                ingredient,
+                style: AppTextStyles.bodyLarge().copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+
+            const Icon(
+              Icons.chevron_right,
+              size: 20,
+              color: AppColors.textSecondary,
+            ),
+          ],
+        ),
       ),
     );
   }

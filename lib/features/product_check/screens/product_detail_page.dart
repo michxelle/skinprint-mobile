@@ -389,6 +389,7 @@ class ProductDetailPage extends StatelessWidget {
                         builder: (_) => PersonalizedComparisonPage(
                           product: product,
                           comparison: comparison,
+                          savedProductsController: savedProductsController,
                         ),
                       ),
                     );
