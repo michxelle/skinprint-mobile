@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:skinprint/core/theme/app_colors.dart';
 import 'package:skinprint/core/theme/app_text_styles.dart';
 import 'package:skinprint/core/widgets/primary_button.dart';
+import 'package:skinprint/features/about/screens/about_skinprint_page.dart';
 import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
 import 'package:skinprint/features/product_check/screens/product_search_page.dart';
 
@@ -44,7 +45,34 @@ class HomePage extends StatelessWidget {
               style: AppTextStyles.bodyLarge(color: AppColors.textSecondary),
             ),
 
-            const SizedBox(height: 34),
+            const SizedBox(height: 14),
+
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => const AboutSkinprintPage(),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: Text(
+                  'About Skinprint',
+                  style: AppTextStyles.bodyMedium(
+                    color: AppColors.primaryAction,
+                  ).copyWith(fontWeight: FontWeight.w600),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 30),
 
             PrimaryButton(
               label: 'Check a Product',
