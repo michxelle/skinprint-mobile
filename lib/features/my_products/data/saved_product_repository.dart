@@ -1,9 +1,9 @@
 import 'package:sqflite/sqflite.dart';
 
-import '/core/database/app_database.dart';
-import '/features/product_check/models/beauty_product.dart';
-import '/features/my_products/models/product_reaction.dart';
-import '/features/my_products/models/saved_product.dart';
+import 'package:skinprint/core/database/app_database.dart';
+import 'package:skinprint/features/product_check/models/beauty_product.dart';
+import 'package:skinprint/features/my_products/models/product_reaction.dart';
+import 'package:skinprint/features/my_products/models/saved_product.dart';
 
 class SavedProductRepository {
   final AppDatabase _appDatabase;

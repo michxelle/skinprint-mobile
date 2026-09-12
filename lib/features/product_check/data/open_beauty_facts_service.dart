@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../models/beauty_product.dart';
+import 'package:skinprint/features/product_check/models/beauty_product.dart';
 
 class OpenBeautyFactsService {
   static const String _host = 'world.openbeautyfacts.org';

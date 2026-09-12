@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '/core/theme/app_colors.dart';
-import '/core/theme/app_text_styles.dart';
-import '/features/home/screens/home_page.dart';
-import '/features/my_products/controllers/saved_products_controller.dart';
-import '/features/my_products/screens/my_products_page.dart';
+import 'package:skinprint/core/theme/app_colors.dart';
+import 'package:skinprint/core/theme/app_text_styles.dart';
+import 'package:skinprint/features/home/screens/home_page.dart';
+import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
+import 'package:skinprint/features/my_products/screens/my_products_page.dart';
 
 class MainShell
     extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '/core/theme/app_colors.dart';
-import '/core/theme/app_text_styles.dart';
-import '/features/my_products/models/saved_product.dart';
+import 'package:skinprint/core/theme/app_colors.dart';
+import 'package:skinprint/core/theme/app_text_styles.dart';
+import 'package:skinprint/features/my_products/models/saved_product.dart';
 import 'reaction_label.dart';
 
 class SavedProductRow

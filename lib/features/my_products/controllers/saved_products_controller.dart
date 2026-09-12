@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-import '/features/product_check/models/beauty_product.dart';
-import '/features/my_products/data/saved_product_repository.dart';
-import '/features/my_products/models/product_reaction.dart';
-import '/features/my_products/models/saved_product.dart';
+import 'package:skinprint/features/product_check/models/beauty_product.dart';
+import 'package:skinprint/features/my_products/data/saved_product_repository.dart';
+import 'package:skinprint/features/my_products/models/product_reaction.dart';
+import 'package:skinprint/features/my_products/models/saved_product.dart';
 
 class SavedProductsController
     extends ChangeNotifier {

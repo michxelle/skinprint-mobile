@@ -1,12 +1,11 @@
-import '../models/ingredient_analysis.dart';
+import 'package:skinprint/features/product_check/models/ingredient_analysis.dart';
+import 'package:skinprint/features/product_check/services/ingredient_parser.dart';
 
 class IngredientAnalyzer {
   IngredientAnalyzer._();
 
   static const Set<String> _fragranceKeywords = {
     'fragrance',
-    'parfum',
-    'perfume',
     'aroma',
     'limonene',
     'linalool',
@@ -18,8 +17,6 @@ class IngredientAnalyzer {
 
   static const Set<String> _dryingAlcoholKeywords = {
     'alcohol denat',
-    'alcohol denat.',
-    'denatured alcohol',
     'ethanol',
     'ethyl alcohol',
     'sd alcohol',
@@ -29,16 +26,19 @@ class IngredientAnalyzer {
   };
 
   static ProductAnalysis analyze(
-    String ingredientsText,
-  ) {
-    final ingredients = _parseIngredients(
+      String ingredientsText,
+      ) {
+    final parsedIngredients =
+    IngredientParser.parse(
       ingredientsText,
     );
 
     final flags = <IngredientFlag>[];
 
-    for (final ingredient in ingredients) {
-      final normalized = ingredient.toLowerCase();
+    for (final ingredient
+    in parsedIngredients) {
+      final normalized =
+          ingredient.normalizedName;
 
       if (_matchesAny(
         normalized,
@@ -46,11 +46,13 @@ class IngredientAnalyzer {
       )) {
         flags.add(
           IngredientFlag(
-            ingredient: ingredient,
-            type: IngredientConcernType.fragrance,
+            ingredient:
+            ingredient.displayName,
+            type:
+            IngredientConcernType.fragrance,
             category: 'Fragrance',
             explanation:
-                'This ingredient is fragrance-related. '
+            'This ingredient is fragrance-related. '
                 'Some users prefer to avoid fragrance '
                 'because individual skin responses can vary.',
           ),
@@ -59,14 +61,18 @@ class IngredientAnalyzer {
         continue;
       }
 
-      if (_isDryingAlcohol(normalized)) {
+      if (_isDryingAlcohol(
+        normalized,
+      )) {
         flags.add(
           IngredientFlag(
-            ingredient: ingredient,
-            type: IngredientConcernType.dryingAlcohol,
+            ingredient:
+            ingredient.displayName,
+            type: IngredientConcernType
+                .dryingAlcohol,
             category: 'Drying alcohol',
             explanation:
-                'This ingredient belongs to a group of '
+            'This ingredient belongs to a group of '
                 'volatile alcohols that some users prefer '
                 'to avoid in their skincare products.',
           ),
@@ -75,14 +81,18 @@ class IngredientAnalyzer {
         continue;
       }
 
-      if (_isArtificialColor(normalized)) {
+      if (_isArtificialColor(
+        normalized,
+      )) {
         flags.add(
           IngredientFlag(
-            ingredient: ingredient,
-            type: IngredientConcernType.artificialColor,
+            ingredient:
+            ingredient.displayName,
+            type: IngredientConcernType
+                .artificialColor,
             category: 'Colorant',
             explanation:
-                'This appears to be a cosmetic colorant. '
+            'This appears to be a cosmetic colorant. '
                 'Skinprint highlights it so you can compare '
                 'it with your personal product history.',
           ),
@@ -91,33 +101,28 @@ class IngredientAnalyzer {
     }
 
     return ProductAnalysis(
-      ingredients: ingredients,
+      ingredients: parsedIngredients
+          .map(
+            (ingredient) =>
+        ingredient.displayName,
+      )
+          .toList(),
       flags: flags,
     );
   }
 
-  static List<String> _parseIngredients(
-    String text,
-  ) {
-    if (text.trim().isEmpty) {
-      return [];
-    }
-
-    return text
-        .split(RegExp(r'[,;]'))
-        .map((ingredient) => ingredient.trim())
-        .where((ingredient) => ingredient.isNotEmpty)
-        .toList();
-  }
-
   static bool _matchesAny(
-    String ingredient,
-    Set<String> keywords,
-  ) {
+      String ingredient,
+      Set<String> keywords,
+      ) {
     for (final keyword in keywords) {
       if (ingredient == keyword ||
-          ingredient.startsWith('$keyword ') ||
-          ingredient.contains(' $keyword')) {
+          ingredient.startsWith(
+            '$keyword ',
+          ) ||
+          ingredient.contains(
+            ' $keyword',
+          )) {
         return true;
       }
     }
@@ -126,9 +131,8 @@ class IngredientAnalyzer {
   }
 
   static bool _isDryingAlcohol(
-    String ingredient,
-  ) {
-    // these are fatty alcohols, not the drying alcohol category
+      String ingredient,
+      ) {
     const fattyAlcohols = {
       'cetyl alcohol',
       'cetearyl alcohol',
@@ -151,8 +155,8 @@ class IngredientAnalyzer {
   }
 
   static bool _isArtificialColor(
-    String ingredient,
-  ) {
+      String ingredient,
+      ) {
     final ciColorPattern = RegExp(
       r'\bci\s?\d{5}\b',
       caseSensitive: false,
@@ -168,8 +172,14 @@ class IngredientAnalyzer {
       caseSensitive: false,
     );
 
-    return ciColorPattern.hasMatch(ingredient) ||
-        namedColorPattern.hasMatch(ingredient) ||
-        fdAndCPattern.hasMatch(ingredient);
+    return ciColorPattern.hasMatch(
+      ingredient,
+    ) ||
+        namedColorPattern.hasMatch(
+          ingredient,
+        ) ||
+        fdAndCPattern.hasMatch(
+          ingredient,
+        );
   }
 }

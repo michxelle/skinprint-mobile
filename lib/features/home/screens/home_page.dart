@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import '/core/theme/app_colors.dart';
-import '/core/theme/app_text_styles.dart';
-import '/core/widgets/primary_button.dart';
-import '/features/my_products/controllers/saved_products_controller.dart';
-import '/features/product_check/screens/product_search_page.dart';
+import 'package:skinprint/core/theme/app_colors.dart';
+import 'package:skinprint/core/theme/app_text_styles.dart';
+import 'package:skinprint/core/widgets/primary_button.dart';
+import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
+import 'package:skinprint/features/product_check/screens/product_search_page.dart';
 
 class HomePage
     extends StatelessWidget {

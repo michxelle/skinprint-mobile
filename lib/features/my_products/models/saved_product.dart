@@ -1,4 +1,4 @@
-import '/features/product_check/models/beauty_product.dart';
+import 'package:skinprint/features/product_check/models/beauty_product.dart';
 import 'product_reaction.dart';
 
 class SavedProduct {

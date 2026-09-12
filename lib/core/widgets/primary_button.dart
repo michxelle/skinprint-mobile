@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../theme/app_text_styles.dart';
+import 'package:skinprint/core/theme/app_text_styles.dart';
 
 class PrimaryButton extends StatelessWidget {
   final String label;

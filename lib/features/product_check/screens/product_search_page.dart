@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '/core/theme/app_colors.dart';
-import '/core/theme/app_text_styles.dart';
-import '/core/widgets/primary_button.dart';
-import '/features/product_check/data/open_beauty_facts_service.dart';
-import '/features/product_check/models/beauty_product.dart';
-import '/features/product_check/widgets/product_result_card.dart';
+import 'package:skinprint/core/theme/app_colors.dart';
+import 'package:skinprint/core/theme/app_text_styles.dart';
+import 'package:skinprint/core/widgets/primary_button.dart';
+import 'package:skinprint/features/product_check/data/open_beauty_facts_service.dart';
+import 'package:skinprint/features/product_check/models/beauty_product.dart';
+import 'package:skinprint/features/product_check/widgets/product_result_card.dart';
 import 'product_detail_page.dart';
-import '/features/my_products/controllers/saved_products_controller.dart';
+import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
 
 class ProductSearchPage extends StatefulWidget {
   final SavedProductsController savedProductsController;

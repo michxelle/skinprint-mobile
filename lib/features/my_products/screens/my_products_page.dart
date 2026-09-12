@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 
-import '/core/theme/app_colors.dart';
-import '/core/theme/app_text_styles.dart';
-import '/features/my_products/controllers/saved_products_controller.dart';
-import '/features/my_products/models/saved_product.dart';
-import '/features/my_products/widgets/saved_product_row.dart';
+import 'package:skinprint/core/theme/app_colors.dart';
+import 'package:skinprint/core/theme/app_text_styles.dart';
+import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
+import 'package:skinprint/features/my_products/models/saved_product.dart';
+import 'package:skinprint/features/my_products/widgets/saved_product_row.dart';
 import 'saved_product_detail_page.dart';
 
 class MyProductsPage

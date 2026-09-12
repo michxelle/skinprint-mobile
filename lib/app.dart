@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '/core/theme/app_theme.dart';
-import '/features/navigation/screens/main_shell.dart';
+import 'package:skinprint/core/theme/app_theme.dart';
+import 'package:skinprint/features/navigation/screens/main_shell.dart';
 
 class SkinprintApp
     extends StatelessWidget {
