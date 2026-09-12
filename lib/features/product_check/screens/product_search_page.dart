@@ -11,19 +11,17 @@ import 'package:skinprint/features/my_products/controllers/saved_products_contro
 
 class ProductSearchPage extends StatefulWidget {
   final SavedProductsController savedProductsController;
+
   const ProductSearchPage({super.key, required this.savedProductsController});
 
   @override
-  State<ProductSearchPage> createState() =>
-      _ProductSearchPageState();
+  State<ProductSearchPage> createState() => _ProductSearchPageState();
 }
 
 class _ProductSearchPageState extends State<ProductSearchPage> {
-  final TextEditingController _searchController =
-      TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
 
-  final OpenBeautyFactsService _service =
-      OpenBeautyFactsService();
+  final OpenBeautyFactsService _service = OpenBeautyFactsService();
 
   List<BeautyProduct> _products = [];
 
@@ -48,8 +46,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
     if (query.isEmpty) {
       setState(() {
-        _errorMessage =
-            'Enter a product name, brand, or barcode.';
+        _errorMessage = 'Enter a product name, brand, or barcode.';
       });
 
       return;
@@ -65,8 +62,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     });
 
     try {
-      final results =
-          await _service.searchProducts(query);
+      final results = await _service.searchProducts(query);
 
       if (!mounted) {
         return;
@@ -94,16 +90,13 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     }
   }
 
-  void _openProduct(
-    BeautyProduct product,
-  ) {
+  void _openProduct(BeautyProduct product) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) => ProductDetailPage(
           product: product,
-          savedProductsController:
-              widget.savedProductsController,
+          savedProductsController: widget.savedProductsController,
         ),
       ),
     );
@@ -112,28 +105,19 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Check a Product'),
-      ),
+      appBar: AppBar(title: const Text('Check a Product')),
       body: SafeArea(
         top: false,
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(
-                24,
-                34,
-                24,
-                26,
-              ),
+              padding: const EdgeInsets.fromLTRB(24, 34, 24, 26),
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     'Find your product.',
-                    style:
-                        AppTextStyles.displayMedium(),
+                    style: AppTextStyles.displayMedium(),
                   ),
 
                   const SizedBox(height: 10),
@@ -141,23 +125,18 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
                   Text(
                     'Search by product name, brand, '
                     'or barcode.',
-                    style:
-                        AppTextStyles.bodyMedium(),
+                    style: AppTextStyles.bodyMedium(),
                   ),
 
                   const SizedBox(height: 24),
 
                   TextField(
                     controller: _searchController,
-                    textInputAction:
-                        TextInputAction.search,
+                    textInputAction: TextInputAction.search,
                     onSubmitted: (_) => _search(),
-                    style:
-                        AppTextStyles.bodyLarge(),
-                    decoration:
-                        const InputDecoration(
-                      hintText:
-                          'COSRX, Rhode,...',
+                    style: AppTextStyles.bodyLarge(),
+                    decoration: const InputDecoration(
+                      hintText: 'COSRX, Rhode,...',
                     ),
                   ),
 
@@ -174,11 +153,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
                     Text(
                       _errorMessage!,
-                      style:
-                          AppTextStyles.bodyMedium(
-                        color:
-                            AppColors.concern,
-                      ),
+                      style: AppTextStyles.bodyMedium(color: AppColors.concern),
                     ),
                   ],
                 ],
@@ -187,9 +162,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
 
             const Divider(),
 
-            Expanded(
-              child: _buildResults(),
-            ),
+            Expanded(child: _buildResults()),
           ],
         ),
       ),
@@ -199,9 +172,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
   Widget _buildResults() {
     if (_isLoading) {
       return const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.primaryAction,
-        ),
+        child: CircularProgressIndicator(color: AppColors.primaryAction),
       );
     }
 
@@ -213,9 +184,7 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
           child: Text(
             'Search for something you already use, '
             'or something you’re thinking of buying.',
-            style: AppTextStyles.bodyLarge(
-              color: AppColors.textSecondary,
-            ),
+            style: AppTextStyles.bodyLarge(color: AppColors.textSecondary),
           ),
         ),
       );
@@ -227,22 +196,16 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
         child: Align(
           alignment: Alignment.topLeft,
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Nothing came up.',
-                style:
-                    AppTextStyles.sectionTitle(),
-              ),
+              Text('Nothing came up.', style: AppTextStyles.sectionTitle()),
 
               const SizedBox(height: 8),
 
               Text(
                 'Try another spelling, brand name, '
                 'or barcode.',
-                style:
-                    AppTextStyles.bodyMedium(),
+                style: AppTextStyles.bodyMedium(),
               ),
             ],
           ),
@@ -251,12 +214,9 @@ class _ProductSearchPageState extends State<ProductSearchPage> {
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 24,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24),
       itemCount: _products.length,
-      separatorBuilder: (_, __) =>
-          const Divider(),
+      separatorBuilder: (_, __) => const Divider(),
       itemBuilder: (context, index) {
         final product = _products[index];
 

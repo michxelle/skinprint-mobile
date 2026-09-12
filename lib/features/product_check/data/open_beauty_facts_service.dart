@@ -9,12 +9,11 @@ class OpenBeautyFactsService {
 
   static const Map<String, String> _headers = {
     'Accept': 'application/json',
-    'User-Agent': 'Skinprint/1.0 (Flutter; https://github.com/michxelle/skinprint-mobile)',
+    'User-Agent':
+        'Skinprint/1.0 (Flutter; https://github.com/michxelle/skinprint-mobile)',
   };
 
-  Future<List<BeautyProduct>> searchProducts(
-    String query,
-  ) async {
+  Future<List<BeautyProduct>> searchProducts(String query) async {
     final trimmedQuery = query.trim();
 
     if (trimmedQuery.isEmpty) {
@@ -22,14 +21,10 @@ class OpenBeautyFactsService {
     }
 
     // if the user entered only numbers, assume they entered a barcode
-    final isBarcode = RegExp(r'^\d{8,14}$').hasMatch(
-      trimmedQuery,
-    );
+    final isBarcode = RegExp(r'^\d{8,14}$').hasMatch(trimmedQuery);
 
     if (isBarcode) {
-      final product = await getProductByBarcode(
-        trimmedQuery,
-      );
+      final product = await getProductByBarcode(trimmedQuery);
 
       if (product == null) {
         return [];
@@ -38,24 +33,16 @@ class OpenBeautyFactsService {
       return [product];
     }
 
-    final uri = Uri.https(
-      _host,
-      '/cgi/search.pl',
-      {
-        'search_terms': trimmedQuery,
-        'search_simple': '1',
-        'action': 'process',
-        'json': '1',
-        'page_size': '15',
-        'fields':
-            'code,product_name,brands,ingredients_text,image_front_url',
-      },
-    );
+    final uri = Uri.https(_host, '/cgi/search.pl', {
+      'search_terms': trimmedQuery,
+      'search_simple': '1',
+      'action': 'process',
+      'json': '1',
+      'page_size': '15',
+      'fields': 'code,product_name,brands,ingredients_text,image_front_url',
+    });
 
-    final response = await http.get(
-      uri,
-      headers: _headers,
-    );
+    final response = await http.get(uri, headers: _headers);
 
     if (response.statusCode != 200) {
       throw Exception(
@@ -67,9 +54,7 @@ class OpenBeautyFactsService {
     final decoded = jsonDecode(response.body);
 
     if (decoded is! Map<String, dynamic>) {
-      throw const FormatException(
-        'Unexpected API response.',
-      );
+      throw const FormatException('Unexpected API response.');
     }
 
     final productsJson = decoded['products'];
@@ -81,29 +66,16 @@ class OpenBeautyFactsService {
     return productsJson
         .whereType<Map<String, dynamic>>()
         .map(BeautyProduct.fromJson)
-        .where(
-          (product) =>
-              product.name != 'Unnamed product',
-        )
+        .where((product) => product.name != 'Unnamed product')
         .toList();
   }
 
-  Future<BeautyProduct?> getProductByBarcode(
-    String barcode,
-  ) async {
-    final uri = Uri.https(
-      _host,
-      '/api/v2/product/$barcode.json',
-      {
-        'fields':
-            'code,product_name,brands,ingredients_text,image_front_url',
-      },
-    );
+  Future<BeautyProduct?> getProductByBarcode(String barcode) async {
+    final uri = Uri.https(_host, '/api/v2/product/$barcode.json', {
+      'fields': 'code,product_name,brands,ingredients_text,image_front_url',
+    });
 
-    final response = await http.get(
-      uri,
-      headers: _headers,
-    );
+    final response = await http.get(uri, headers: _headers);
 
     if (response.statusCode != 200) {
       throw Exception(
@@ -115,9 +87,7 @@ class OpenBeautyFactsService {
     final decoded = jsonDecode(response.body);
 
     if (decoded is! Map<String, dynamic>) {
-      throw const FormatException(
-        'Unexpected API response.',
-      );
+      throw const FormatException('Unexpected API response.');
     }
 
     final status = decoded['status'];
@@ -132,9 +102,7 @@ class OpenBeautyFactsService {
       return null;
     }
 
-    final productData = Map<String, dynamic>.from(
-      productJson,
-    );
+    final productData = Map<String, dynamic>.from(productJson);
 
     productData['code'] ??= barcode;
 

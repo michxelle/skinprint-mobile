@@ -5,8 +5,7 @@ import 'package:skinprint/core/theme/app_text_styles.dart';
 import 'package:skinprint/features/my_products/models/saved_product.dart';
 import 'reaction_label.dart';
 
-class SavedProductRow
-    extends StatelessWidget {
+class SavedProductRow extends StatelessWidget {
   final SavedProduct product;
   final VoidCallback onTap;
 
@@ -21,57 +20,37 @@ class SavedProductRow
     return InkWell(
       onTap: onTap,
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(
-          vertical: 18,
-        ),
+        padding: const EdgeInsets.symmetric(vertical: 18),
         child: Row(
           children: [
             SizedBox(
               width: 72,
               height: 86,
-              child:
-                  product.imageUrl.isNotEmpty
-                      ? ClipRRect(
-                          borderRadius:
-                              BorderRadius.circular(
-                            8,
-                          ),
-                          child:
-                              Image.network(
-                            product.imageUrl,
-                            fit:
-                                BoxFit.cover,
-                            errorBuilder: (
-                              context,
-                              error,
-                              stackTrace,
-                            ) {
-                              return const _Placeholder();
-                            },
-                          ),
-                        )
-                      : const _Placeholder(),
+              child: product.imageUrl.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Image.network(
+                        product.imageUrl,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return const _Placeholder();
+                        },
+                      ),
+                    )
+                  : const _Placeholder(),
             ),
 
             const SizedBox(width: 18),
 
             Expanded(
               child: Column(
-                crossAxisAlignment:
-                    CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    product.brand
-                        .toUpperCase(),
+                    product.brand.toUpperCase(),
                     maxLines: 1,
-                    overflow:
-                        TextOverflow.ellipsis,
-                    style:
-                        AppTextStyles.label(
-                      color:
-                          AppColors.primaryAction,
-                    ),
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.label(color: AppColors.primaryAction),
                   ),
 
                   const SizedBox(height: 5),
@@ -79,21 +58,13 @@ class SavedProductRow
                   Text(
                     product.name,
                     maxLines: 2,
-                    overflow:
-                        TextOverflow.ellipsis,
-                    style:
-                        AppTextStyles.sectionTitle()
-                            .copyWith(
-                      fontSize: 21,
-                    ),
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.sectionTitle().copyWith(fontSize: 21),
                   ),
 
                   const SizedBox(height: 10),
 
-                  ReactionLabel(
-                    reaction:
-                        product.reaction,
-                  ),
+                  ReactionLabel(reaction: product.reaction),
                 ],
               ),
             ),
@@ -104,8 +75,7 @@ class SavedProductRow
   }
 }
 
-class _Placeholder
-    extends StatelessWidget {
+class _Placeholder extends StatelessWidget {
   const _Placeholder();
 
   @override
@@ -116,8 +86,7 @@ class _Placeholder
       child: Text(
         'No image',
         textAlign: TextAlign.center,
-        style:
-            AppTextStyles.caption(),
+        style: AppTextStyles.caption(),
       ),
     );
   }

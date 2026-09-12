@@ -3,22 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:skinprint/core/theme/app_theme.dart';
 import 'package:skinprint/features/navigation/screens/main_shell.dart';
 
-class SkinprintApp
-    extends StatelessWidget {
-  const SkinprintApp({
-    super.key,
-  });
+class SkinprintApp extends StatelessWidget {
+  const SkinprintApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Skinprint',
-      debugShowCheckedModeBanner:
-          false,
-      theme:
-          AppTheme.lightTheme,
-      home:
-          const MainShell(),
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.lightTheme,
+      home: const MainShell(),
     );
   }
 }

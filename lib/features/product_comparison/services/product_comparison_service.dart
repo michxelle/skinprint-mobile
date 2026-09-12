@@ -11,140 +11,78 @@ class ProductComparisonService {
     required BeautyProduct newProduct,
     required List<SavedProduct> history,
   }) {
-    final newIngredients =
-    IngredientParser.parse(
-      newProduct.ingredientsText,
-    );
+    final newIngredients = IngredientParser.parse(newProduct.ingredientsText);
 
     final relevantHistory = history
-        .where(
-          (savedProduct) =>
-      savedProduct.code !=
-          newProduct.code,
-    )
+        .where((savedProduct) => savedProduct.code != newProduct.code)
         .toList();
 
     final workedProducts = relevantHistory
-        .where(
-          (product) =>
-      product.reaction ==
-          ProductReaction.worked,
-    )
-        .map(
-      _HistoryIngredientSet.fromProduct,
-    )
+        .where((product) => product.reaction == ProductReaction.worked)
+        .map(_HistoryIngredientSet.fromProduct)
         .toList();
 
-    final didntWorkProducts =
-    relevantHistory
-        .where(
-          (product) =>
-      product.reaction ==
-          ProductReaction.didntWork,
-    )
-        .map(
-      _HistoryIngredientSet.fromProduct,
-    )
+    final didntWorkProducts = relevantHistory
+        .where((product) => product.reaction == ProductReaction.didntWork)
+        .map(_HistoryIngredientSet.fromProduct)
         .toList();
 
-    final neutralProducts =
-        relevantHistory
-            .where(
-              (product) =>
-          product.reaction ==
-              ProductReaction.neutral,
-        )
-            .length;
+    final neutralProducts = relevantHistory
+        .where((product) => product.reaction == ProductReaction.neutral)
+        .length;
 
-    final workedOnlyMatches =
-    <IngredientHistoryMatch>[];
+    final workedOnlyMatches = <IngredientHistoryMatch>[];
 
-    final didntWorkOnlyMatches =
-    <IngredientHistoryMatch>[];
+    final didntWorkOnlyMatches = <IngredientHistoryMatch>[];
 
-    final mixedMatches =
-    <IngredientHistoryMatch>[];
+    final mixedMatches = <IngredientHistoryMatch>[];
 
-    for (final ingredient
-    in newIngredients) {
+    for (final ingredient in newIngredients) {
       final workedNames = workedProducts
           .where(
             (product) =>
-            product.ingredients.contains(
-              ingredient.normalizedName,
-            ),
-      )
-          .map(
-            (product) =>
-        product.productName,
-      )
+                product.ingredients.contains(ingredient.normalizedName),
+          )
+          .map((product) => product.productName)
           .toList();
 
-      final didntWorkNames =
-      didntWorkProducts
+      final didntWorkNames = didntWorkProducts
           .where(
             (product) =>
-            product.ingredients
-                .contains(
-              ingredient.normalizedName,
-            ),
-      )
-          .map(
-            (product) =>
-        product.productName,
-      )
+                product.ingredients.contains(ingredient.normalizedName),
+          )
+          .map((product) => product.productName)
           .toList();
 
-      if (workedNames.isEmpty &&
-          didntWorkNames.isEmpty) {
+      if (workedNames.isEmpty && didntWorkNames.isEmpty) {
         continue;
       }
 
-      final match =
-      IngredientHistoryMatch(
-        ingredient:
-        ingredient.displayName,
-        workedProductCount:
-        workedNames.length,
-        didntWorkProductCount:
-        didntWorkNames.length,
-        workedProductNames:
-        workedNames,
-        didntWorkProductNames:
-        didntWorkNames,
+      final match = IngredientHistoryMatch(
+        ingredient: ingredient.displayName,
+        workedProductCount: workedNames.length,
+        didntWorkProductCount: didntWorkNames.length,
+        workedProductNames: workedNames,
+        didntWorkProductNames: didntWorkNames,
       );
 
-      if (workedNames.isNotEmpty &&
-          didntWorkNames.isNotEmpty) {
-        mixedMatches.add(
-          match,
-        );
+      if (workedNames.isNotEmpty && didntWorkNames.isNotEmpty) {
+        mixedMatches.add(match);
       } else if (workedNames.isNotEmpty) {
-        workedOnlyMatches.add(
-          match,
-        );
+        workedOnlyMatches.add(match);
       } else {
-        didntWorkOnlyMatches.add(
-          match,
-        );
+        didntWorkOnlyMatches.add(match);
       }
     }
 
     return ProductHistoryComparison(
-      totalNewIngredients:
-      newIngredients.length,
-      comparedWorkedProducts:
-      workedProducts.length,
-      comparedDidntWorkProducts:
-      didntWorkProducts.length,
-      ignoredNeutralProducts:
-      neutralProducts,
-      workedOnlyMatches:
-      workedOnlyMatches,
-      didntWorkOnlyMatches:
-      didntWorkOnlyMatches,
-      mixedMatches:
-      mixedMatches,
+      totalNewIngredients: newIngredients.length,
+      comparedWorkedProducts: workedProducts.length,
+      comparedDidntWorkProducts: didntWorkProducts.length,
+      ignoredNeutralProducts: neutralProducts,
+      workedOnlyMatches: workedOnlyMatches,
+      didntWorkOnlyMatches: didntWorkOnlyMatches,
+      mixedMatches: mixedMatches,
     );
   }
 }
@@ -158,22 +96,13 @@ class _HistoryIngredientSet {
     required this.ingredients,
   });
 
-  factory _HistoryIngredientSet.fromProduct(
-      SavedProduct product,
-      ) {
-    final parsed =
-    IngredientParser.parse(
-      product.ingredientsText,
-    );
+  factory _HistoryIngredientSet.fromProduct(SavedProduct product) {
+    final parsed = IngredientParser.parse(product.ingredientsText);
 
     return _HistoryIngredientSet(
-      productName:
-      product.name,
+      productName: product.name,
       ingredients: parsed
-          .map(
-            (ingredient) =>
-        ingredient.normalizedName,
-      )
+          .map((ingredient) => ingredient.normalizedName)
           .toSet(),
     );
   }

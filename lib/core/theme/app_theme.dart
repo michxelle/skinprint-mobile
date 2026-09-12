@@ -24,9 +24,7 @@ class AppTheme {
     );
 
     return baseTheme.copyWith(
-      textTheme: GoogleFonts.dmSansTextTheme(
-        baseTheme.textTheme,
-      ).apply(
+      textTheme: GoogleFonts.dmSansTextTheme(baseTheme.textTheme).apply(
         bodyColor: AppColors.textPrimary,
         displayColor: AppColors.textPrimary,
       ),
@@ -38,9 +36,7 @@ class AppTheme {
         elevation: 0,
         scrolledUnderElevation: 0,
         centerTitle: false,
-        iconTheme: const IconThemeData(
-          color: AppColors.onPrimary,
-        ),
+        iconTheme: const IconThemeData(color: AppColors.onPrimary),
         titleTextStyle: AppTextStyles.appBarTitle(),
       ),
 
@@ -54,9 +50,7 @@ class AppTheme {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: AppColors.border,
-          ),
+          borderSide: const BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -67,9 +61,7 @@ class AppTheme {
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(
-            color: AppColors.concern,
-          ),
+          borderSide: const BorderSide(color: AppColors.concern),
         ),
       ),
 
@@ -78,13 +70,9 @@ class AppTheme {
           backgroundColor: AppColors.primaryAction,
           foregroundColor: AppColors.onPrimary,
           disabledBackgroundColor: AppColors.primarySoft,
-          disabledForegroundColor:
-              AppColors.textSecondary,
+          disabledForegroundColor: AppColors.textSecondary,
           elevation: 0,
-          minimumSize: const Size(
-            double.infinity,
-            54,
-          ),
+          minimumSize: const Size(double.infinity, 54),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),

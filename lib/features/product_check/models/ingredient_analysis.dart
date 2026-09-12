@@ -1,8 +1,4 @@
-enum IngredientConcernType {
-  fragrance,
-  dryingAlcohol,
-  artificialColor,
-}
+enum IngredientConcernType { fragrance, dryingAlcohol, artificialColor }
 
 class IngredientFlag {
   final String ingredient;
@@ -22,10 +18,7 @@ class ProductAnalysis {
   final List<String> ingredients;
   final List<IngredientFlag> flags;
 
-  const ProductAnalysis({
-    required this.ingredients,
-    required this.flags,
-  });
+  const ProductAnalysis({required this.ingredients, required this.flags});
 
   int get totalIngredients => ingredients.length;
 
@@ -34,10 +27,6 @@ class ProductAnalysis {
   bool get hasFlags => flags.isNotEmpty;
 
   int countType(IngredientConcernType type) {
-    return flags
-        .where(
-          (flag) => flag.type == type,
-        )
-        .length;
+    return flags.where((flag) => flag.type == type).length;
   }
 }

@@ -3,47 +3,35 @@ import 'package:skinprint/features/product_check/models/parsed_ingredient.dart';
 class IngredientParser {
   IngredientParser._();
 
-  static List<ParsedIngredient> parse(
-      String ingredientsText,
-      ) {
+  static List<ParsedIngredient> parse(String ingredientsText) {
     if (ingredientsText.trim().isEmpty) {
       return [];
     }
 
-    final rawIngredients = ingredientsText.split(
-      RegExp(r'[,;]'),
-    );
+    final rawIngredients = ingredientsText.split(RegExp(r'[,;]'));
 
     final parsed = <ParsedIngredient>[];
 
     final seenNormalizedNames = <String>{};
 
     for (final rawIngredient in rawIngredients) {
-      final displayName = _cleanDisplayName(
-        rawIngredient,
-      );
+      final displayName = _cleanDisplayName(rawIngredient);
 
       if (displayName.isEmpty) {
         continue;
       }
 
-      final normalizedName = normalize(
-        displayName,
-      );
+      final normalizedName = normalize(displayName);
 
       if (normalizedName.isEmpty) {
         continue;
       }
 
-      if (seenNormalizedNames.contains(
-        normalizedName,
-      )) {
+      if (seenNormalizedNames.contains(normalizedName)) {
         continue;
       }
 
-      seenNormalizedNames.add(
-        normalizedName,
-      );
+      seenNormalizedNames.add(normalizedName);
 
       parsed.add(
         ParsedIngredient(
@@ -56,57 +44,33 @@ class IngredientParser {
     return parsed;
   }
 
-  static String normalize(
-      String ingredient,
-      ) {
-    var value = ingredient
-        .toLowerCase()
-        .replaceAll('_', ' ')
-        .trim();
+  static String normalize(String ingredient) {
+    var value = ingredient.toLowerCase().replaceAll('_', ' ').trim();
 
     // remove common cosmetic-list symbols
-    value = value.replaceAll(
-      RegExp(r'[*†‡]'),
-      '',
-    );
+    value = value.replaceAll(RegExp(r'[*†‡]'), '');
 
     // remove percentages
-    value = value.replaceAll(
-      RegExp(r'\s+\d+(\.\d+)?%$'),
-      '',
-    );
+    value = value.replaceAll(RegExp(r'\s+\d+(\.\d+)?%$'), '');
 
     // remove most punctuation for comparison
-    value = value.replaceAll(
-      RegExp(r'[()\[\]{}.]'),
-      ' ',
-    );
+    value = value.replaceAll(RegExp(r'[()\[\]{}.]'), ' ');
 
-    value = value.replaceAll(
-      RegExp(r'\s+'),
-      ' ',
-    );
+    value = value.replaceAll(RegExp(r'\s+'), ' ');
 
     value = value.trim();
 
     return _canonicalizeAlias(value);
   }
 
-  static String _cleanDisplayName(
-      String ingredient,
-      ) {
+  static String _cleanDisplayName(String ingredient) {
     return ingredient
         .replaceAll('_', ' ')
-        .replaceAll(
-      RegExp(r'\s+'),
-      ' ',
-    )
+        .replaceAll(RegExp(r'\s+'), ' ')
         .trim();
   }
 
-  static String _canonicalizeAlias(
-      String value,
-      ) {
+  static String _canonicalizeAlias(String value) {
     const aliases = {
       'aqua': 'water',
       'aqua water': 'water',
@@ -118,8 +82,7 @@ class IngredientParser {
       'fragrance parfum': 'fragrance',
 
       'alcohol denat': 'alcohol denat',
-      'denatured alcohol':
-      'alcohol denat',
+      'denatured alcohol': 'alcohol denat',
     };
 
     return aliases[value] ?? value;

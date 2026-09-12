@@ -5,15 +5,11 @@ import 'package:skinprint/features/my_products/data/saved_product_repository.dar
 import 'package:skinprint/features/my_products/models/product_reaction.dart';
 import 'package:skinprint/features/my_products/models/saved_product.dart';
 
-class SavedProductsController
-    extends ChangeNotifier {
+class SavedProductsController extends ChangeNotifier {
   final SavedProductRepository _repository;
 
-  SavedProductsController({
-    SavedProductRepository? repository,
-  }) : _repository =
-            repository ??
-            SavedProductRepository();
+  SavedProductsController({SavedProductRepository? repository})
+    : _repository = repository ?? SavedProductRepository();
 
   List<SavedProduct> _products = [];
 
@@ -21,46 +17,29 @@ class SavedProductsController
   bool _hasLoaded = false;
   String? _errorMessage;
 
-  List<SavedProduct> get products =>
-      List.unmodifiable(_products);
+  List<SavedProduct> get products => List.unmodifiable(_products);
 
   bool get isLoading => _isLoading;
 
   bool get hasLoaded => _hasLoaded;
 
-  String? get errorMessage =>
-      _errorMessage;
+  String? get errorMessage => _errorMessage;
 
-  int get totalProducts =>
-      _products.length;
+  int get totalProducts => _products.length;
 
   int get workedCount => _products
-      .where(
-        (product) =>
-            product.reaction ==
-            ProductReaction.worked,
-      )
+      .where((product) => product.reaction == ProductReaction.worked)
       .length;
 
   int get didntWorkCount => _products
-      .where(
-        (product) =>
-            product.reaction ==
-            ProductReaction.didntWork,
-      )
+      .where((product) => product.reaction == ProductReaction.didntWork)
       .length;
 
   int get neutralCount => _products
-      .where(
-        (product) =>
-            product.reaction ==
-            ProductReaction.neutral,
-      )
+      .where((product) => product.reaction == ProductReaction.neutral)
       .length;
 
-  SavedProduct? findByCode(
-    String code,
-  ) {
+  SavedProduct? findByCode(String code) {
     for (final product in _products) {
       if (product.code == code) {
         return product;
@@ -70,9 +49,7 @@ class SavedProductsController
     return null;
   }
 
-  Future<void> loadProducts({
-    bool force = false,
-  }) async {
+  Future<void> loadProducts({bool force = false}) async {
     if (_isLoading) {
       return;
     }
@@ -87,13 +64,11 @@ class SavedProductsController
     notifyListeners();
 
     try {
-      _products =
-          await _repository.getAllProducts();
+      _products = await _repository.getAllProducts();
 
       _hasLoaded = true;
     } catch (_) {
-      _errorMessage =
-          'Couldn\'t load your saved products.';
+      _errorMessage = 'Couldn\'t load your saved products.';
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -108,20 +83,14 @@ class SavedProductsController
       await loadProducts();
     }
 
-    final saved =
-        await _repository.saveProduct(
+    final saved = await _repository.saveProduct(
       product: product,
       reaction: reaction,
     );
 
-    _products.removeWhere(
-      (item) => item.code == saved.code,
-    );
+    _products.removeWhere((item) => item.code == saved.code);
 
-    _products.insert(
-      0,
-      saved,
-    );
+    _products.insert(0, saved);
 
     _hasLoaded = true;
 
@@ -134,16 +103,12 @@ class SavedProductsController
     required SavedProduct product,
     required ProductReaction reaction,
   }) async {
-    final updated =
-        await _repository.updateReaction(
+    final updated = await _repository.updateReaction(
       product: product,
       reaction: reaction,
     );
 
-    final index = _products.indexWhere(
-      (item) =>
-          item.code == updated.code,
-    );
+    final index = _products.indexWhere((item) => item.code == updated.code);
 
     if (index >= 0) {
       _products[index] = updated;
@@ -152,17 +117,10 @@ class SavedProductsController
     notifyListeners();
   }
 
-  Future<void> deleteProduct(
-    SavedProduct product,
-  ) async {
-    await _repository.deleteProduct(
-      product.code,
-    );
+  Future<void> deleteProduct(SavedProduct product) async {
+    await _repository.deleteProduct(product.code);
 
-    _products.removeWhere(
-      (item) =>
-          item.code == product.code,
-    );
+    _products.removeWhere((item) => item.code == product.code);
 
     notifyListeners();
   }

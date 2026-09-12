@@ -7,9 +7,7 @@ class AppTextStyles {
   AppTextStyles._();
 
   // Cormorant Garamond
-  static TextStyle brand({
-    Color color = AppColors.textPrimary,
-  }) {
+  static TextStyle brand({Color color = AppColors.textPrimary}) {
     return GoogleFonts.cormorantGaramond(
       fontSize: 30,
       fontWeight: FontWeight.w700,
@@ -18,9 +16,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle displayLarge({
-    Color color = AppColors.textPrimary,
-  }) {
+  static TextStyle displayLarge({Color color = AppColors.textPrimary}) {
     return GoogleFonts.cormorantGaramond(
       fontSize: 42,
       height: 1.05,
@@ -29,9 +25,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle displayMedium({
-    Color color = AppColors.textPrimary,
-  }) {
+  static TextStyle displayMedium({Color color = AppColors.textPrimary}) {
     return GoogleFonts.cormorantGaramond(
       fontSize: 32,
       height: 1.1,
@@ -40,9 +34,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle productTitle({
-    Color color = AppColors.textPrimary,
-  }) {
+  static TextStyle productTitle({Color color = AppColors.textPrimary}) {
     return GoogleFonts.cormorantGaramond(
       fontSize: 30,
       height: 1.1,
@@ -51,9 +43,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle sectionTitle({
-    Color color = AppColors.textPrimary,
-  }) {
+  static TextStyle sectionTitle({Color color = AppColors.textPrimary}) {
     return GoogleFonts.cormorantGaramond(
       fontSize: 26,
       fontWeight: FontWeight.w600,
@@ -62,9 +52,7 @@ class AppTextStyles {
   }
 
   // DM Sans
-  static TextStyle bodyLarge({
-    Color color = AppColors.textPrimary,
-  }) {
+  static TextStyle bodyLarge({Color color = AppColors.textPrimary}) {
     return GoogleFonts.dmSans(
       fontSize: 16,
       height: 1.55,
@@ -73,9 +61,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle bodyMedium({
-    Color color = AppColors.textSecondary,
-  }) {
+  static TextStyle bodyMedium({Color color = AppColors.textSecondary}) {
     return GoogleFonts.dmSans(
       fontSize: 14,
       height: 1.5,
@@ -84,9 +70,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle label({
-    Color color = AppColors.textSecondary,
-  }) {
+  static TextStyle label({Color color = AppColors.textSecondary}) {
     return GoogleFonts.dmSans(
       fontSize: 12,
       fontWeight: FontWeight.w600,
@@ -95,9 +79,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle button({
-    Color color = AppColors.onPrimary,
-  }) {
+  static TextStyle button({Color color = AppColors.onPrimary}) {
     return GoogleFonts.dmSans(
       fontSize: 15,
       fontWeight: FontWeight.w600,
@@ -105,9 +87,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle appBarTitle({
-    Color color = AppColors.onPrimary,
-  }) {
+  static TextStyle appBarTitle({Color color = AppColors.onPrimary}) {
     return GoogleFonts.dmSans(
       fontSize: 17,
       fontWeight: FontWeight.w600,
@@ -115,13 +95,7 @@ class AppTextStyles {
     );
   }
 
-  static TextStyle caption({
-    Color color = AppColors.textSecondary,
-  }) {
-    return GoogleFonts.dmSans(
-      fontSize: 12,
-      height: 1.45,
-      color: color,
-    );
+  static TextStyle caption({Color color = AppColors.textSecondary}) {
+    return GoogleFonts.dmSans(fontSize: 12, height: 1.45, color: color);
   }
 }

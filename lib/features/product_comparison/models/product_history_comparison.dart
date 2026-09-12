@@ -15,15 +15,12 @@ class IngredientHistoryMatch {
     required this.didntWorkProductNames,
   });
 
-  bool get appearsInWorkedProducts =>
-      workedProductCount > 0;
+  bool get appearsInWorkedProducts => workedProductCount > 0;
 
-  bool get appearsInDidntWorkProducts =>
-      didntWorkProductCount > 0;
+  bool get appearsInDidntWorkProducts => didntWorkProductCount > 0;
 
   bool get appearsInBoth =>
-      appearsInWorkedProducts &&
-          appearsInDidntWorkProducts;
+      appearsInWorkedProducts && appearsInDidntWorkProducts;
 }
 
 class ProductHistoryComparison {
@@ -34,14 +31,11 @@ class ProductHistoryComparison {
 
   final int ignoredNeutralProducts;
 
-  final List<IngredientHistoryMatch>
-  workedOnlyMatches;
+  final List<IngredientHistoryMatch> workedOnlyMatches;
 
-  final List<IngredientHistoryMatch>
-  didntWorkOnlyMatches;
+  final List<IngredientHistoryMatch> didntWorkOnlyMatches;
 
-  final List<IngredientHistoryMatch>
-  mixedMatches;
+  final List<IngredientHistoryMatch> mixedMatches;
 
   const ProductHistoryComparison({
     required this.totalNewIngredients,
@@ -54,27 +48,22 @@ class ProductHistoryComparison {
   });
 
   bool get hasReactionHistory =>
-      comparedWorkedProducts > 0 ||
-          comparedDidntWorkProducts > 0;
+      comparedWorkedProducts > 0 || comparedDidntWorkProducts > 0;
 
   int get matchedIngredientCount =>
       workedOnlyMatches.length +
-          didntWorkOnlyMatches.length +
-          mixedMatches.length;
+      didntWorkOnlyMatches.length +
+      mixedMatches.length;
 
   int get unseenIngredientCount {
-    final unseen =
-        totalNewIngredients -
-            matchedIngredientCount;
+    final unseen = totalNewIngredients - matchedIngredientCount;
 
     return unseen < 0 ? 0 : unseen;
   }
 
   int get workedHistoryIngredientCount =>
-      workedOnlyMatches.length +
-          mixedMatches.length;
+      workedOnlyMatches.length + mixedMatches.length;
 
   int get didntWorkHistoryIngredientCount =>
-      didntWorkOnlyMatches.length +
-          mixedMatches.length;
+      didntWorkOnlyMatches.length + mixedMatches.length;
 }

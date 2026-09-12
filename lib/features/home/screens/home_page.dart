@@ -6,39 +6,23 @@ import 'package:skinprint/core/widgets/primary_button.dart';
 import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
 import 'package:skinprint/features/product_check/screens/product_search_page.dart';
 
-class HomePage
-    extends StatelessWidget {
-  final SavedProductsController
-      savedProductsController;
+class HomePage extends StatelessWidget {
+  final SavedProductsController savedProductsController;
 
-  const HomePage({
-    super.key,
-    required this.savedProductsController,
-  });
+  const HomePage({super.key, required this.savedProductsController});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       top: false,
       child: SingleChildScrollView(
-        padding:
-            const EdgeInsets.fromLTRB(
-          24,
-          46,
-          24,
-          40,
-        ),
+        padding: const EdgeInsets.fromLTRB(24, 46, 24, 40),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               'BEAUTY, MADE MORE PERSONAL',
-              style:
-                  AppTextStyles.label(
-                color:
-                    AppColors.primaryAction,
-              ),
+              style: AppTextStyles.label(color: AppColors.primaryAction),
             ),
 
             const SizedBox(height: 18),
@@ -47,8 +31,7 @@ class HomePage
               'Know what’s inside\n'
               'before it joins\n'
               'your shelf.',
-              style:
-                  AppTextStyles.displayLarge(),
+              style: AppTextStyles.displayLarge(),
             ),
 
             const SizedBox(height: 22),
@@ -58,11 +41,7 @@ class HomePage
               'spot the categories you care about, and '
               'compare new products with what has or '
               'hasn’t worked for you before.',
-              style:
-                  AppTextStyles.bodyLarge(
-                color:
-                    AppColors.textSecondary,
-              ),
+              style: AppTextStyles.bodyLarge(color: AppColors.textSecondary),
             ),
 
             const SizedBox(height: 34),
@@ -73,10 +52,8 @@ class HomePage
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        ProductSearchPage(
-                      savedProductsController:
-                          savedProductsController,
+                    builder: (_) => ProductSearchPage(
+                      savedProductsController: savedProductsController,
                     ),
                   ),
                 );
@@ -91,8 +68,7 @@ class HomePage
 
             Text(
               'What Skinprint looks for',
-              style:
-                  AppTextStyles.sectionTitle(),
+              style: AppTextStyles.sectionTitle(),
             ),
 
             const SizedBox(height: 18),
@@ -131,8 +107,7 @@ class HomePage
               'Skinprint provides ingredient information '
               'for comparison and awareness. It does not '
               'predict or diagnose skin reactions.',
-              style:
-                  AppTextStyles.caption(),
+              style: AppTextStyles.caption(),
             ),
           ],
         ),
@@ -141,8 +116,7 @@ class HomePage
   }
 }
 
-class _ScreeningItem
-    extends StatelessWidget {
+class _ScreeningItem extends StatelessWidget {
   final String number;
   final String title;
   final String description;
@@ -156,42 +130,30 @@ class _ScreeningItem
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
           width: 38,
           child: Text(
             number,
-            style:
-                AppTextStyles.label(
-              color: AppColors.primary,
-            ),
+            style: AppTextStyles.label(color: AppColors.primary),
           ),
         ),
 
         Expanded(
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 title,
-                style:
-                    AppTextStyles.bodyLarge()
-                        .copyWith(
-                  fontWeight:
-                      FontWeight.w600,
+                style: AppTextStyles.bodyLarge().copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
               ),
 
               const SizedBox(height: 4),
 
-              Text(
-                description,
-                style:
-                    AppTextStyles.bodyMedium(),
-              ),
+              Text(description, style: AppTextStyles.bodyMedium()),
             ],
           ),
         ),

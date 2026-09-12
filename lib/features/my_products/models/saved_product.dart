@@ -39,23 +39,16 @@ class SavedProduct {
     );
   }
 
-  factory SavedProduct.fromMap(
-    Map<String, Object?> map,
-  ) {
+  factory SavedProduct.fromMap(Map<String, Object?> map) {
     return SavedProduct(
       id: map['id'] as int?,
       code: map['code'] as String,
       name: map['name'] as String,
       brand: map['brand'] as String,
-      ingredientsText:
-          map['ingredients_text'] as String,
+      ingredientsText: map['ingredients_text'] as String,
       imageUrl: map['image_url'] as String,
-      reaction: productReactionFromDatabase(
-        map['reaction'] as String,
-      ),
-      savedAt: DateTime.parse(
-        map['saved_at'] as String,
-      ),
+      reaction: productReactionFromDatabase(map['reaction'] as String),
+      savedAt: DateTime.parse(map['saved_at'] as String),
     );
   }
 
@@ -82,10 +75,7 @@ class SavedProduct {
     );
   }
 
-  SavedProduct copyWith({
-    int? id,
-    ProductReaction? reaction,
-  }) {
+  SavedProduct copyWith({int? id, ProductReaction? reaction}) {
     return SavedProduct(
       id: id ?? this.id,
       code: code,

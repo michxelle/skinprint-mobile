@@ -10,8 +10,7 @@ import 'package:skinprint/features/my_products/models/saved_product.dart';
 import 'package:skinprint/features/my_products/widgets/reaction_label.dart';
 import 'package:skinprint/features/my_products/widgets/reaction_picker_sheet.dart';
 
-class SavedProductDetailPage
-    extends StatelessWidget {
+class SavedProductDetailPage extends StatelessWidget {
   final SavedProduct initialProduct;
 
   final SavedProductsController controller;
@@ -26,57 +25,36 @@ class SavedProductDetailPage
     BuildContext context,
     SavedProduct product,
   ) async {
-    final reaction =
-        await showReactionPicker(
+    final reaction = await showReactionPicker(
       context,
-      currentReaction:
-          product.reaction,
+      currentReaction: product.reaction,
     );
 
-    if (reaction == null ||
-        reaction == product.reaction) {
+    if (reaction == null || reaction == product.reaction) {
       return;
     }
 
-    await controller.updateReaction(
-      product: product,
-      reaction: reaction,
-    );
+    await controller.updateReaction(product: product, reaction: reaction);
 
     if (!context.mounted) {
       return;
     }
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Your product experience was updated.',
-        ),
-      ),
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Your product experience was updated.')),
     );
   }
 
-  void _analyze(
-    BuildContext context,
-    SavedProduct product,
-  ) {
-    final beautyProduct =
-        product.toBeautyProduct();
+  void _analyze(BuildContext context, SavedProduct product) {
+    final beautyProduct = product.toBeautyProduct();
 
-    final analysis =
-        IngredientAnalyzer.analyze(
-      product.ingredientsText,
-    );
+    final analysis = IngredientAnalyzer.analyze(product.ingredientsText);
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (_) =>
-            AnalysisResultPage(
-          product: beautyProduct,
-          analysis: analysis,
-        ),
+            AnalysisResultPage(product: beautyProduct, analysis: analysis),
       ),
     );
   }
@@ -85,48 +63,29 @@ class SavedProductDetailPage
     BuildContext context,
     SavedProduct product,
   ) async {
-    final confirmed =
-        await showModalBottomSheet<bool>(
+    final confirmed = await showModalBottomSheet<bool>(
       context: context,
-      backgroundColor:
-          Colors.transparent,
+      backgroundColor: Colors.transparent,
       builder: (sheetContext) {
         return Container(
-          padding:
-              const EdgeInsets.fromLTRB(
-            24,
-            12,
-            24,
-            30,
-          ),
-          decoration:
-              const BoxDecoration(
+          padding: const EdgeInsets.fromLTRB(24, 12, 24, 30),
+          decoration: const BoxDecoration(
             color: AppColors.surface,
-            borderRadius:
-                BorderRadius.vertical(
-              top: Radius.circular(24),
-            ),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
           ),
           child: SafeArea(
             top: false,
             child: Column(
-              mainAxisSize:
-                  MainAxisSize.min,
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Center(
                   child: Container(
                     width: 40,
                     height: 4,
-                    decoration:
-                        BoxDecoration(
-                      color:
-                          AppColors.border,
-                      borderRadius:
-                          BorderRadius.circular(
-                        100,
-                      ),
+                    decoration: BoxDecoration(
+                      color: AppColors.border,
+                      borderRadius: BorderRadius.circular(100),
                     ),
                   ),
                 ),
@@ -135,8 +94,7 @@ class SavedProductDetailPage
 
                 Text(
                   'Remove this product?',
-                  style:
-                      AppTextStyles.displayMedium(),
+                  style: AppTextStyles.displayMedium(),
                 ),
 
                 const SizedBox(height: 10),
@@ -144,8 +102,7 @@ class SavedProductDetailPage
                 Text(
                   'It will no longer be part '
                   'of your Skinprint history.',
-                  style:
-                      AppTextStyles.bodyMedium(),
+                  style: AppTextStyles.bodyMedium(),
                 ),
 
                 const SizedBox(height: 28),
@@ -154,21 +111,15 @@ class SavedProductDetailPage
                   width: double.infinity,
                   height: 52,
                   child: ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(
-                      backgroundColor:
-                          AppColors.concern,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.concern,
                     ),
                     onPressed: () {
-                      Navigator.pop(
-                        sheetContext,
-                        true,
-                      );
+                      Navigator.pop(sheetContext, true);
                     },
                     child: Text(
                       'Remove Product',
-                      style:
-                          AppTextStyles.button(),
+                      style: AppTextStyles.button(),
                     ),
                   ),
                 ),
@@ -179,17 +130,12 @@ class SavedProductDetailPage
                   width: double.infinity,
                   child: TextButton(
                     onPressed: () {
-                      Navigator.pop(
-                        sheetContext,
-                        false,
-                      );
+                      Navigator.pop(sheetContext, false);
                     },
                     child: Text(
                       'Cancel',
-                      style:
-                          AppTextStyles.bodyMedium(
-                        color: AppColors
-                            .textPrimary,
+                      style: AppTextStyles.bodyMedium(
+                        color: AppColors.textPrimary,
                       ),
                     ),
                   ),
@@ -205,9 +151,7 @@ class SavedProductDetailPage
       return;
     }
 
-    await controller.deleteProduct(
-      product,
-    );
+    await controller.deleteProduct(product);
 
     if (!context.mounted) {
       return;
@@ -219,49 +163,26 @@ class SavedProductDetailPage
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:
-            const Text('My Product'),
-      ),
+      appBar: AppBar(title: const Text('My Product')),
       body: AnimatedBuilder(
         animation: controller,
-        builder: (
-          context,
-          child,
-        ) {
+        builder: (context, child) {
           final currentProduct =
-              controller.findByCode(
-                    initialProduct.code,
-                  ) ??
-                  initialProduct;
+              controller.findByCode(initialProduct.code) ?? initialProduct;
 
           return SafeArea(
             top: false,
             child: ListView(
-              padding:
-                  const EdgeInsets.fromLTRB(
-                24,
-                34,
-                24,
-                44,
-              ),
+              padding: const EdgeInsets.fromLTRB(24, 34, 24, 44),
               children: [
                 Center(
                   child: SizedBox(
                     height: 220,
-                    child: currentProduct
-                            .imageUrl
-                            .isNotEmpty
+                    child: currentProduct.imageUrl.isNotEmpty
                         ? Image.network(
-                            currentProduct
-                                .imageUrl,
-                            fit:
-                                BoxFit.contain,
-                            errorBuilder: (
-                              context,
-                              error,
-                              stackTrace,
-                            ) {
+                            currentProduct.imageUrl,
+                            fit: BoxFit.contain,
+                            errorBuilder: (context, error, stackTrace) {
                               return const _ImagePlaceholder();
                             },
                           )
@@ -272,22 +193,13 @@ class SavedProductDetailPage
                 const SizedBox(height: 34),
 
                 Text(
-                  currentProduct.brand
-                      .toUpperCase(),
-                  style:
-                      AppTextStyles.label(
-                    color:
-                        AppColors.primaryAction,
-                  ),
+                  currentProduct.brand.toUpperCase(),
+                  style: AppTextStyles.label(color: AppColors.primaryAction),
                 ),
 
                 const SizedBox(height: 6),
 
-                Text(
-                  currentProduct.name,
-                  style:
-                      AppTextStyles.productTitle(),
-                ),
+                Text(currentProduct.name, style: AppTextStyles.productTitle()),
 
                 const SizedBox(height: 34),
 
@@ -295,34 +207,19 @@ class SavedProductDetailPage
 
                 const SizedBox(height: 28),
 
-                Text(
-                  'Your experience',
-                  style:
-                      AppTextStyles.sectionTitle(),
-                ),
+                Text('Your experience', style: AppTextStyles.sectionTitle()),
 
                 const SizedBox(height: 12),
 
                 Row(
                   children: [
                     Expanded(
-                      child: ReactionLabel(
-                        reaction:
-                            currentProduct
-                                .reaction,
-                      ),
+                      child: ReactionLabel(reaction: currentProduct.reaction),
                     ),
 
                     TextButton(
-                      onPressed: () =>
-                          _changeReaction(
-                        context,
-                        currentProduct,
-                      ),
-                      child:
-                          const Text(
-                        'Change',
-                      ),
+                      onPressed: () => _changeReaction(context, currentProduct),
+                      child: const Text('Change'),
                     ),
                   ],
                 ),
@@ -333,59 +230,35 @@ class SavedProductDetailPage
 
                 const SizedBox(height: 28),
 
-                Text(
-                  'Ingredients',
-                  style:
-                      AppTextStyles.sectionTitle(),
-                ),
+                Text('Ingredients', style: AppTextStyles.sectionTitle()),
 
                 const SizedBox(height: 14),
 
                 SelectableText(
-                  currentProduct
-                          .ingredientsText
-                          .isNotEmpty
-                      ? currentProduct
-                          .ingredientsText
+                  currentProduct.ingredientsText.isNotEmpty
+                      ? currentProduct.ingredientsText
                       : 'Ingredient information '
-                          'is unavailable.',
-                  style:
-                      AppTextStyles.bodyMedium(),
+                            'is unavailable.',
+                  style: AppTextStyles.bodyMedium(),
                 ),
 
                 const SizedBox(height: 34),
 
-                if (currentProduct
-                    .ingredientsText
-                    .isNotEmpty)
+                if (currentProduct.ingredientsText.isNotEmpty)
                   PrimaryButton(
-                    label:
-                        'Analyze Ingredients',
-                    onPressed: () =>
-                        _analyze(
-                      context,
-                      currentProduct,
-                    ),
+                    label: 'Analyze Ingredients',
+                    onPressed: () => _analyze(context, currentProduct),
                   ),
 
                 const SizedBox(height: 12),
 
                 TextButton(
-                  onPressed: () =>
-                      _removeProduct(
-                    context,
-                    currentProduct,
-                  ),
+                  onPressed: () => _removeProduct(context, currentProduct),
                   child: Text(
                     'Remove from My Products',
-                    style:
-                        AppTextStyles.bodyMedium(
-                      color:
-                          AppColors.concern,
-                    ).copyWith(
-                      fontWeight:
-                          FontWeight.w600,
-                    ),
+                    style: AppTextStyles.bodyMedium(
+                      color: AppColors.concern,
+                    ).copyWith(fontWeight: FontWeight.w600),
                   ),
                 ),
               ],
@@ -397,8 +270,7 @@ class SavedProductDetailPage
   }
 }
 
-class _ImagePlaceholder
-    extends StatelessWidget {
+class _ImagePlaceholder extends StatelessWidget {
   const _ImagePlaceholder();
 
   @override
@@ -412,8 +284,7 @@ class _ImagePlaceholder
         child: Text(
           'Image unavailable',
           textAlign: TextAlign.center,
-          style:
-              AppTextStyles.caption(),
+          style: AppTextStyles.caption(),
         ),
       ),
     );

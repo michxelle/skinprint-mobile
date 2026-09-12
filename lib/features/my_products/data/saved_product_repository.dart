@@ -8,31 +8,19 @@ import 'package:skinprint/features/my_products/models/saved_product.dart';
 class SavedProductRepository {
   final AppDatabase _appDatabase;
 
-  SavedProductRepository({
-    AppDatabase? appDatabase,
-  }) : _appDatabase =
-            appDatabase ?? AppDatabase.instance;
+  SavedProductRepository({AppDatabase? appDatabase})
+    : _appDatabase = appDatabase ?? AppDatabase.instance;
 
-  Future<List<SavedProduct>>
-      getAllProducts() async {
-    final db =
-        await _appDatabase.database;
+  Future<List<SavedProduct>> getAllProducts() async {
+    final db = await _appDatabase.database;
 
-    final results = await db.query(
-      'saved_products',
-      orderBy: 'saved_at DESC',
-    );
+    final results = await db.query('saved_products', orderBy: 'saved_at DESC');
 
-    return results
-        .map(SavedProduct.fromMap)
-        .toList();
+    return results.map(SavedProduct.fromMap).toList();
   }
 
-  Future<SavedProduct?> getProductByCode(
-    String code,
-  ) async {
-    final db =
-        await _appDatabase.database;
+  Future<SavedProduct?> getProductByCode(String code) async {
+    final db = await _appDatabase.database;
 
     final results = await db.query(
       'saved_products',
@@ -45,20 +33,16 @@ class SavedProductRepository {
       return null;
     }
 
-    return SavedProduct.fromMap(
-      results.first,
-    );
+    return SavedProduct.fromMap(results.first);
   }
 
   Future<SavedProduct> saveProduct({
     required BeautyProduct product,
     required ProductReaction reaction,
   }) async {
-    final db =
-        await _appDatabase.database;
+    final db = await _appDatabase.database;
 
-    final savedProduct =
-        SavedProduct.fromBeautyProduct(
+    final savedProduct = SavedProduct.fromBeautyProduct(
       product: product,
       reaction: reaction,
     );
@@ -70,46 +54,31 @@ class SavedProductRepository {
     final id = await db.insert(
       'saved_products',
       map,
-      conflictAlgorithm:
-          ConflictAlgorithm.replace,
+      conflictAlgorithm: ConflictAlgorithm.replace,
     );
 
-    return savedProduct.copyWith(
-      id: id,
-    );
+    return savedProduct.copyWith(id: id);
   }
 
   Future<SavedProduct> updateReaction({
     required SavedProduct product,
     required ProductReaction reaction,
   }) async {
-    final db =
-        await _appDatabase.database;
+    final db = await _appDatabase.database;
 
     await db.update(
       'saved_products',
-      {
-        'reaction': reaction.name,
-      },
+      {'reaction': reaction.name},
       where: 'code = ?',
       whereArgs: [product.code],
     );
 
-    return product.copyWith(
-      reaction: reaction,
-    );
+    return product.copyWith(reaction: reaction);
   }
 
-  Future<void> deleteProduct(
-    String code,
-  ) async {
-    final db =
-        await _appDatabase.database;
+  Future<void> deleteProduct(String code) async {
+    final db = await _appDatabase.database;
 
-    await db.delete(
-      'saved_products',
-      where: 'code = ?',
-      whereArgs: [code],
-    );
+    await db.delete('saved_products', where: 'code = ?', whereArgs: [code]);
   }
 }

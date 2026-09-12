@@ -1,8 +1,4 @@
-enum ProductReaction {
-  worked,
-  didntWork,
-  neutral,
-}
+enum ProductReaction { worked, didntWork, neutral }
 
 extension ProductReactionExtension on ProductReaction {
   String get label {
@@ -32,9 +28,7 @@ extension ProductReactionExtension on ProductReaction {
   }
 }
 
-ProductReaction productReactionFromDatabase(
-  String value,
-) {
+ProductReaction productReactionFromDatabase(String value) {
   return ProductReaction.values.firstWhere(
     (reaction) => reaction.name == value,
     orElse: () => ProductReaction.neutral,

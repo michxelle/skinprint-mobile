@@ -30,10 +30,7 @@ class PrimaryButton extends StatelessWidget {
                   color: Colors.white,
                 ),
               )
-            : Text(
-                label,
-                style: AppTextStyles.button(),
-              ),
+            : Text(label, style: AppTextStyles.button()),
       ),
     );
   }
