@@ -252,12 +252,23 @@ class _ComparisonOverview extends StatelessWidget {
 
         const SizedBox(height: 12),
 
-        Text(
-          '${comparison.didntWorkHistoryIngredientCount} '
-          'linked to your didn’t-work history  ·  '
-          '${comparison.workedHistoryIngredientCount} '
-          'linked to your worked history',
-          style: AppTextStyles.bodyMedium(),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${comparison.didntWorkHistoryIngredientCount} '
+              'from your didn’t-work history',
+              style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
+            ),
+
+            const SizedBox(height: 4),
+
+            Text(
+              '${comparison.workedHistoryIngredientCount} '
+              'from your worked history',
+              style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
+            ),
+          ],
         ),
       ],
     );

@@ -3,14 +3,26 @@ import 'package:flutter/material.dart';
 import 'package:skinprint/core/theme/app_colors.dart';
 import 'package:skinprint/core/theme/app_text_styles.dart';
 import 'package:skinprint/features/my_products/controllers/saved_products_controller.dart';
+import 'package:skinprint/features/my_products/models/product_reaction.dart';
 import 'package:skinprint/features/my_products/models/saved_product.dart';
 import 'package:skinprint/features/my_products/widgets/saved_product_row.dart';
 import 'saved_product_detail_page.dart';
 
-class MyProductsPage extends StatelessWidget {
+enum _ProductFilter { all, worked, didntWork, neutral }
+
+class MyProductsPage extends StatefulWidget {
   final SavedProductsController controller;
 
   const MyProductsPage({super.key, required this.controller});
+
+  @override
+  State<MyProductsPage> createState() => _MyProductsPageState();
+}
+
+class _MyProductsPageState extends State<MyProductsPage> {
+  _ProductFilter selectedFilter = _ProductFilter.all;
+
+  SavedProductsController get controller => widget.controller;
 
   void _openProduct(BuildContext context, SavedProduct product) {
     Navigator.push(
@@ -22,6 +34,28 @@ class MyProductsPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  List<SavedProduct> get filteredProducts {
+    switch (selectedFilter) {
+      case _ProductFilter.worked:
+        return controller.products
+            .where((product) => product.reaction == ProductReaction.worked)
+            .toList();
+
+      case _ProductFilter.didntWork:
+        return controller.products
+            .where((product) => product.reaction == ProductReaction.didntWork)
+            .toList();
+
+      case _ProductFilter.neutral:
+        return controller.products
+            .where((product) => product.reaction == ProductReaction.neutral)
+            .toList();
+
+      case _ProductFilter.all:
+        return controller.products;
+    }
   }
 
   @override
@@ -36,6 +70,8 @@ class MyProductsPage extends StatelessWidget {
               child: CircularProgressIndicator(color: AppColors.primaryAction),
             );
           }
+
+          final products = filteredProducts;
 
           return RefreshIndicator(
             color: AppColors.primaryAction,
@@ -61,12 +97,19 @@ class MyProductsPage extends StatelessWidget {
                 ),
 
                 if (controller.products.isNotEmpty) ...[
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
 
-                  _HistorySummary(controller: controller),
+                  _FilterBar(
+                    selected: selectedFilter,
+                    onChanged: (filter) {
+                      setState(() {
+                        selectedFilter = filter;
+                      });
+                    },
+                  ),
                 ],
 
-                const SizedBox(height: 30),
+                const SizedBox(height: 28),
 
                 const Divider(),
 
@@ -81,8 +124,10 @@ class MyProductsPage extends StatelessWidget {
 
                 if (controller.products.isEmpty)
                   const _EmptyHistory()
+                else if (products.isEmpty)
+                  _EmptyFilter(filter: selectedFilter)
                 else
-                  ..._buildProductList(context),
+                  ..._buildProductList(context, products),
               ],
             ),
           );
@@ -91,20 +136,26 @@ class MyProductsPage extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildProductList(BuildContext context) {
+  List<Widget> _buildProductList(
+    BuildContext context,
+    List<SavedProduct> products,
+  ) {
     final widgets = <Widget>[];
 
-    for (var i = 0; i < controller.products.length; i++) {
-      final product = controller.products[i];
+    final showReactionLabel = selectedFilter == _ProductFilter.all;
+
+    for (var i = 0; i < products.length; i++) {
+      final product = products[i];
 
       widgets.add(
         SavedProductRow(
           product: product,
+          showReactionLabel: showReactionLabel,
           onTap: () => _openProduct(context, product),
         ),
       );
 
-      if (i < controller.products.length - 1) {
+      if (i < products.length - 1) {
         widgets.add(const Divider());
       }
     }
@@ -113,43 +164,93 @@ class MyProductsPage extends StatelessWidget {
   }
 }
 
-class _HistorySummary extends StatelessWidget {
-  final SavedProductsController controller;
+class _FilterBar extends StatelessWidget {
+  final _ProductFilter selected;
+  final ValueChanged<_ProductFilter> onChanged;
 
-  const _HistorySummary({required this.controller});
+  const _FilterBar({required this.selected, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(
-        style: AppTextStyles.bodyMedium(),
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
         children: [
-          TextSpan(
-            text: '${controller.totalProducts} saved',
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+          _FilterButton(
+            label: 'All',
+            value: _ProductFilter.all,
+            selected: selected,
+            onChanged: onChanged,
           ),
 
-          const TextSpan(text: '  ·  '),
+          const SizedBox(width: 8),
 
-          TextSpan(
-            text: '${controller.workedCount} worked',
-            style: const TextStyle(color: AppColors.good),
+          _FilterButton(
+            label: 'Worked',
+            value: _ProductFilter.worked,
+            selected: selected,
+            onChanged: onChanged,
           ),
 
-          const TextSpan(text: '  ·  '),
+          const SizedBox(width: 8),
 
-          TextSpan(
-            text: '${controller.didntWorkCount} didn\'t',
-            style: const TextStyle(color: AppColors.concern),
+          _FilterButton(
+            label: 'Didn\'t work',
+            value: _ProductFilter.didntWork,
+            selected: selected,
+            onChanged: onChanged,
           ),
 
-          const TextSpan(text: '  ·  '),
+          const SizedBox(width: 8),
 
-          TextSpan(text: '${controller.neutralCount} neutral'),
+          _FilterButton(
+            label: 'Neutral',
+            value: _ProductFilter.neutral,
+            selected: selected,
+            onChanged: onChanged,
+          ),
         ],
+      ),
+    );
+  }
+}
+
+class _FilterButton extends StatelessWidget {
+  final String label;
+  final _ProductFilter value;
+  final _ProductFilter selected;
+  final ValueChanged<_ProductFilter> onChanged;
+
+  const _FilterButton({
+    required this.label,
+    required this.value,
+    required this.selected,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isSelected = value == selected;
+
+    return InkWell(
+      onTap: () => onChanged(value),
+      borderRadius: BorderRadius.circular(8),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? AppColors.primaryAction : Colors.transparent,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: isSelected ? AppColors.primaryAction : AppColors.border,
+          ),
+        ),
+        child: Text(
+          label,
+          style: AppTextStyles.bodyMedium(
+            color: isSelected ? Colors.white : AppColors.textPrimary,
+          ).copyWith(fontWeight: FontWeight.w500),
+        ),
       ),
     );
   }
@@ -176,6 +277,39 @@ class _EmptyHistory extends StatelessWidget {
             style: AppTextStyles.bodyMedium(),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _EmptyFilter extends StatelessWidget {
+  final _ProductFilter filter;
+
+  const _EmptyFilter({required this.filter});
+
+  String get message {
+    switch (filter) {
+      case _ProductFilter.worked:
+        return 'No products marked as worked yet.';
+
+      case _ProductFilter.didntWork:
+        return 'No products marked as didn\'t work yet.';
+
+      case _ProductFilter.neutral:
+        return 'No neutral products yet.';
+
+      case _ProductFilter.all:
+        return '';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 38),
+      child: Text(
+        message,
+        style: AppTextStyles.bodyMedium(color: AppColors.textSecondary),
       ),
     );
   }

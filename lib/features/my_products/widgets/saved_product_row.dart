@@ -7,12 +7,14 @@ import 'reaction_label.dart';
 
 class SavedProductRow extends StatelessWidget {
   final SavedProduct product;
+  final bool showReactionLabel;
   final VoidCallback onTap;
 
   const SavedProductRow({
     super.key,
     required this.product,
     required this.onTap,
+    this.showReactionLabel = true,
   });
 
   @override
@@ -62,9 +64,10 @@ class SavedProductRow extends StatelessWidget {
                     style: AppTextStyles.sectionTitle().copyWith(fontSize: 21),
                   ),
 
-                  const SizedBox(height: 10),
-
-                  ReactionLabel(reaction: product.reaction),
+                  if (showReactionLabel) ...[
+                    const SizedBox(height: 10),
+                    ReactionLabel(reaction: product.reaction),
+                  ],
                 ],
               ),
             ),
